@@ -100,11 +100,46 @@ View cleaned datasets in data/processed/
 Open eda_fraudscope.ipynb for visual exploration
 
 
-# Next Steps
-Begin Task 2: Train classifiers (XGBoost, Logistic Regression, etc.)
+ Task 2 — Model Training and Evaluation
+This phase builds on the feature engineering pipeline to implement reliable fraud classification using logistic regression and XGBoost. It emphasizes repeatability, metric-driven selection, and clear separation of logic for maintainability.
+🔧 Modules
+- src/model_training.py — Defines model training routines
+- src/model_utils.py — Handles metric computation and serialization
+- src/extended_pipeline_task2.py — End-to-end pipeline execution
+- notebooks/evaluation_report.ipynb — Visual comparison of classifier performance
+📊 Metrics Used
+- F1-Score — Captures balance between precision and recall
+- AUC-PR — Optimized for imbalance sensitivity
+- Confusion Matrix — Highlights misclassifications
+▶️ Execution
+python src/extended_pipeline_task2.py
 
-Evaluate using PR-AUC and F1-score
 
-Add SHAP for explainability and transparency
+Model artifacts and evaluation results are stored under:
+- artifacts/{ecom, bank}/
+- models/
+Evaluation reports are accessible through the notebook:
+jupyter notebook notebooks/evaluation_report.ipynb
+
+
+
+📌 Task 3 — Model Explainability with SHAP
+This component introduces post-hoc interpretability using SHAP to deconstruct model predictions and support auditability. It delivers local and global insights for transparency across business and regulatory boundaries.
+🔧 Modules
+- src/explainability.py — Generates SHAP plots
+- notebooks/shap_explainability.ipynb — Visual dashboard for interpretation
+📊 Outputs
+- SHAP Summary Plot — Global feature contribution
+- SHAP Force Plot — Individual prediction breakdown
+▶️ Execution
+jupyter notebook notebooks/shap_explainability.ipynb
+
+
+Plots are saved to:
+- models/{ecom, bank}_shap_summary_plot.png
+- models/{ecom, bank}_shap_force_plot.png
+
+This documentation concludes the core modeling and interpretability stages for FraudScope AI. Each module is designed for modular reuse, transparent evaluation, and stakeholder alignment.
+
 
 ## Maintained by Sabona Terefe — Machine Learning Engineer specializing in NLP, modular pipelines, and scalable data infrastructure.
