@@ -1,20 +1,17 @@
 import os
 import joblib
-from sklearn.metrics import f1_score, average_precision_score, confusion_matrix
-
-def evaluate_model(model, X_test, y_test):
-    y_pred = model.predict(X_test)
-    f1 = f1_score(y_test, y_pred)
-    auc_pr = average_precision_score(y_test, model.predict_proba(X_test)[:, 1])
-    cm = confusion_matrix(y_test, y_pred)
-    return {
-        "F1-Score": round(f1, 4),
-        "AUC-PR": round(auc_pr, 4),
-        "Confusion Matrix": cm
-    }
+from sklearn.metrics import f1_score, precision_recall_curve, confusion_matrix, auc
 
 def save_model(model, model_name, scope):
-    path = os.path.join("artifacts", scope, f"{model_name}.pkl")
-    os.makedirs(os.path.dirname(path), exist_ok=True)
+    artifact_dir = os.path.join("artifacts", scope)
+    os.makedirs(artifact_dir, exist_ok=True)
+    path = os.path.join(artifact_dir, f"{model_name}.pkl")
     joblib.dump(model, path)
-    print(f"💾 Model saved: {path}")
+
+def evaluate_model(y_true, y_pred, y_prob):
+    precision, recall, _ = precision_recall_curve(y_true, y_prob)
+    return {
+        "F1-Score": f1_score(y_true, y_pred),
+        "AUC-PR": auc(recall, precision),
+        "Confusion Matrix": confusion_matrix(y_true, y_pred)
+    }
