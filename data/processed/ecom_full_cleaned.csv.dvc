@@ -1,0 +1,5 @@
+outs:
+- md5: de89a7ce203101306842eae4a7a1cf01
+  size: 174457183
+  hash: md5
+  path: ecom_full_cleaned.csv
