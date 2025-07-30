@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  fraudscope-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./dashboard:/app/dashboard
+      - ./data/processed:/app/data/processed
+      - ./artifacts:/app/artifacts
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
