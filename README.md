@@ -1,7 +1,7 @@
 ## FraudScope AI — Task 1: Data Preprocessing & Class Imbalance Handling
-## This repository contains the first stage of the FraudScope AI pipeline, which prepares raw banking and e-commerce datasets for fraud detection. Task 1 covers data cleaning, geolocation enrichment, feature engineering, class imbalance handling, and exploratory data analysis.
+# This repository contains the first stage of the FraudScope AI pipeline, which prepares raw banking and e-commerce datasets for fraud detection. Task 1 covers data cleaning, geolocation enrichment, feature engineering, class imbalance handling, and exploratory data analysis.
 
-#  Datasets
+Datasets
 Managed via DVC and hosted on DagsHub. Not tracked via Git.
 
 Fraud_Data.csv: E-commerce transaction metadata (purchase_time, device_id, source, browser, age, ip_address, etc.)
@@ -12,7 +12,7 @@ creditcard.csv: PCA-transformed bank transactions with extreme class imbalance
 
 All datasets contain highly imbalanced targets (class) indicating fraud (1) or non-fraud (0).
 
-# Access the datasets directly on DagsHub’s data tab at : https://dagshub.com/sabonaterefe/fraudscope-ai?filter=data
+Access the datasets directly on DagsHub’s data tab: https://dagshub.com/sabonaterefe/fraudscope-ai?filter=data
 
 # Task 1 Objectives
 Handle missing and duplicate entries
@@ -27,7 +27,7 @@ Split datasets and apply SMOTE to mitigate imbalance
 
 Save reproducible train-test splits for modeling
 
-# Repository Structure
+Repository Structure
 src/data_preprocessing.py: Contains full preprocessing logic for both datasets, including cleaning, merging, feature engineering, encoding, and balancing
 
 src/execute_data_pipeline.py: Orchestrates execution of the preprocessing pipeline
@@ -36,9 +36,9 @@ notebooks/eda_fraudscope.ipynb: Provides univariate and bivariate analysis to un
 
 requirements.txt: Dependency list for all preprocessing and analysis steps
 
-All processed datasets and splits are saved in data/processed/ (ignored by Git).
+Processed datasets and splits are saved in data/processed/ (ignored by Git)
 
-#  Learning Outcomes
+# Learning Outcomes
 Skills
 
 Implementing robust data pipelines for fraud detection
@@ -78,68 +78,84 @@ Encoding: one-hot for categorical variables
 
 Class imbalance: SMOTE applied after train-test split
 
-Bank
+# Bank
 
 Data cleaning and duplicate removal
 
-Scaling: Amount standardized
+Scaling: amount standardized
 
 Class imbalance: SMOTE applied after split
 
-#  How to Run
+# How to Run
 Clone the repo from DagsHub
 
 Set up Python environment using requirements.txt
 
-Execute preprocessing pipeline via:
+Execute preprocessing pipeline:
+
 
 python src/execute_data_pipeline.py
-
 View cleaned datasets in data/processed/
 
 Open eda_fraudscope.ipynb for visual exploration
 
+# Task 2 — Model Training and Evaluation
+This phase builds on the feature engineering pipeline to implement reliable fraud classification using logistic regression and XGBoost. It emphasizes repeatability, metric-driven selection, and clean separation of logic for maintainability.
 
- Task 2 — Model Training and Evaluation
-This phase builds on the feature engineering pipeline to implement reliable fraud classification using logistic regression and XGBoost. It emphasizes repeatability, metric-driven selection, and clear separation of logic for maintainability.
-🔧 Modules
-- src/model_training.py — Defines model training routines
-- src/model_utils.py — Handles metric computation and serialization
-- src/extended_pipeline_task2.py — End-to-end pipeline execution
-- notebooks/evaluation_report.ipynb — Visual comparison of classifier performance
-📊 Metrics Used
-- F1-Score — Captures balance between precision and recall
-- AUC-PR — Optimized for imbalance sensitivity
-- Confusion Matrix — Highlights misclassifications
-▶️ Execution
+Modules
+src/model_training.py: Defines model training routines
+
+src/model_utils.py: Handles metric computation and serialization
+
+src/extended_pipeline_task2.py: End-to-end pipeline execution
+
+notebooks/evaluation_report.ipynb: Visual comparison of classifier performance
+
+# Metrics Used
+F1-Score: Captures balance between precision and recall
+
+AUC-PR: Optimized for imbalance sensitivity
+
+Confusion Matrix: Highlights misclassifications
+
+# Execution
+Run training:
+
 python src/extended_pipeline_task2.py
+Evaluation results stored under:
 
+artifacts/{ecom, bank}/
 
-Model artifacts and evaluation results are stored under:
-- artifacts/{ecom, bank}/
-- models/
-Evaluation reports are accessible through the notebook:
+models/
+
+# Visualize performance:
+
 jupyter notebook notebooks/evaluation_report.ipynb
-
-
-
-📌 Task 3 — Model Explainability with SHAP
+🔍 Task 3 — Model Explainability with SHAP
 This component introduces post-hoc interpretability using SHAP to deconstruct model predictions and support auditability. It delivers local and global insights for transparency across business and regulatory boundaries.
-🔧 Modules
-- src/explainability.py — Generates SHAP plots
-- notebooks/shap_explainability.ipynb — Visual dashboard for interpretation
-📊 Outputs
-- SHAP Summary Plot — Global feature contribution
-- SHAP Force Plot — Individual prediction breakdown
-▶️ Execution
+
+# Modules
+src/explainability.py: Generates SHAP plots
+
+notebooks/shap_explainability.ipynb: Visual dashboard for interpretation
+
+# Outputs
+SHAP Summary Plot: Global feature contribution
+
+SHAP Force Plot: Individual prediction breakdown
+
+Waterfall Plot: Directional contribution per feature
+
+# Execution
+Launch interactive notebook:
+
+
 jupyter notebook notebooks/shap_explainability.ipynb
+Plots saved to:
 
+models/{ecom, bank}_shap_summary_plot.png
 
-Plots are saved to:
-- models/{ecom, bank}_shap_summary_plot.png
-- models/{ecom, bank}_shap_force_plot.png
+models/{ecom, bank}_shap_force_plot.png
 
-This documentation concludes the core modeling and interpretability stages for FraudScope AI. Each module is designed for modular reuse, transparent evaluation, and stakeholder alignment.
-
-
-## Maintained by Sabona Terefe — Machine Learning Engineer specializing in NLP, modular pipelines, and scalable data infrastructure.
+# Maintained by Sabona Terefe
+# Machine Learning Engineer specializing in NLP, modular pipelines, and scalable data infrastructure.
