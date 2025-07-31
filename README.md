@@ -1,161 +1,179 @@
-## FraudScope AI — Task 1: Data Preprocessing & Class Imbalance Handling
-# This repository contains the first stage of the FraudScope AI pipeline, which prepares raw banking and e-commerce datasets for fraud detection. Task 1 covers data cleaning, geolocation enrichment, feature engineering, class imbalance handling, and exploratory data analysis.
+## FraudScope AI
+## End-to-End Fraud Detection Pipeline for E-commerce and Banking Domains Maintained by: Sabona Terefe, Machine Learning Engineer
+
+ # Overview
+FraudScope AI is a modular and scalable pipeline designed to detect fraudulent transactions across banking and e-commerce platforms. Built with a focus on transparency, reproducibility, and explainability, the system spans from raw data ingestion to SHAP-powered interpretation of model predictions.
+
+This repository comprises three structured phases:
+
+Task 1 — Data Preprocessing & Feature Engineering
+
+Task 2 — Model Training & Evaluation
+
+Task 3 — Model Interpretability using SHAP
+
+All artifacts are version-controlled via DVC (Data Version Control) and stored on DagsHub.
 
 Datasets
-Managed via DVC and hosted on DagsHub. Not tracked via Git.
+Datasets are not tracked via Git. Managed using DVC and hosted on DagsHub.
 
-Fraud_Data.csv: E-commerce transaction metadata (purchase_time, device_id, source, browser, age, ip_address, etc.)
+Fraud_Data.csv: E-commerce transaction metadata (timestamp, user-agent, source, etc.)
 
-IpAddress_to_Country.csv: Maps IP ranges to countries
+IpAddress_to_Country.csv: IP range mapping for country enrichment
 
-creditcard.csv: PCA-transformed bank transactions with extreme class imbalance
+creditcard.csv: PCA-based bank transactions with extreme imbalance
 
-All datasets contain highly imbalanced targets (class) indicating fraud (1) or non-fraud (0).
+All datasets include a binary target class indicating fraud (1) or non-fraud (0). 📎 Access full datasets: DagsHub Data Tab
 
-Access the datasets directly on DagsHub’s data tab: https://dagshub.com/sabonaterefe/fraudscope-ai?filter=data
+# Task 1 — Preprocessing & Class Imbalance Handling
+Objectives
+Clean and deduplicate transaction records
 
-# Task 1 Objectives
-Handle missing and duplicate entries
+Engineer temporal, behavioral, and geolocation features
 
-Engineer temporal and behavioral features from transaction metadata
+Encode categorical variables and scale numerical ones
 
-Map IPs to countries using IP range matching
+Apply SMOTE post-split to handle class imbalance
 
-Scale numeric features and encode categorical ones
+Persist reproducible train-test splits under data/processed/
 
-Split datasets and apply SMOTE to mitigate imbalance
-
-Save reproducible train-test splits for modeling
-
-Repository Structure
-src/data_preprocessing.py: Contains full preprocessing logic for both datasets, including cleaning, merging, feature engineering, encoding, and balancing
-
-src/execute_data_pipeline.py: Orchestrates execution of the preprocessing pipeline
-
-notebooks/eda_fraudscope.ipynb: Provides univariate and bivariate analysis to understand feature distributions and fraud patterns
-
-requirements.txt: Dependency list for all preprocessing and analysis steps
-
-Processed datasets and splits are saved in data/processed/ (ignored by Git)
-
-# Learning Outcomes
-Skills
-
-Implementing robust data pipelines for fraud detection
-
-Handling extreme class imbalance with SMOTE
-
-Engineering time-aware behavioral features
-
-Encoding and scaling features for classification
-
-Knowledge
-
-Business-centric thinking around fraud detection
-
-IP range matching and geolocation enrichment
-
-Justifying preprocessing decisions based on domain insights
-
-Behaviors
-
-Systematic, reproducible pipeline development
-
-Maintaining separation of concerns across modular scripts
-
-Reporting insights clearly via EDA
-
-# Pipeline Summary
+Highlights
 E-commerce
 
-Timestamp parsing: signup_time, purchase_time
+Temporal signals: time_since_signup, hour_of_day, day_of_week
 
-Feature engineering: time_since_signup, hour_of_day, day_of_week, transaction velocity
+Behavioral signals: device_transaction_count, user_transaction_count
 
-IP enrichment: convert ip_address to integer and map to country
+IP enrichment: Integer conversion and country mapping
 
-Encoding: one-hot for categorical variables
+Encoding: One-hot for categorical, standard scaling for numerical
 
-Class imbalance: SMOTE applied after train-test split
+Banking
 
-# Bank
+Cleanup and scaling of raw PCA components
 
-Data cleaning and duplicate removal
+Class imbalance addressed via SMOTE after splitting
 
-Scaling: amount standardized
+Files
+src/data_preprocessing.py: Modular preprocessing for both domains
 
-Class imbalance: SMOTE applied after split
+src/execute_data_pipeline.py: Entrypoint for Task 1 pipeline
 
-# How to Run
-Clone the repo from DagsHub
+notebooks/eda_fraudscope.ipynb: Visual EDA on feature distributions and fraud clusters
 
-Set up Python environment using requirements.txt
+requirements.txt: Dependencies for full pipeline execution
 
-Execute preprocessing pipeline:
-
-
+Run Preprocessing
 python src/execute_data_pipeline.py
-View cleaned datasets in data/processed/
+Explore results:
 
-Open eda_fraudscope.ipynb for visual exploration
+jupyter notebook notebooks/eda_fraudscope.ipynb
+# Task 2 — Model Training & Evaluation
+Goals
+Train interpretable and high-performance models (Logistic Regression, XGBoost)
 
-# Task 2 — Model Training and Evaluation
-This phase builds on the feature engineering pipeline to implement reliable fraud classification using logistic regression and XGBoost. It emphasizes repeatability, metric-driven selection, and clean separation of logic for maintainability.
+Evaluate using fraud-aware metrics
 
-Modules
-src/model_training.py: Defines model training routines
+Serialize models and evaluation artifacts for audit and reuse
 
-src/model_utils.py: Handles metric computation and serialization
+Evaluation Metrics
+F1-Score: Precision-recall balance
 
-src/extended_pipeline_task2.py: End-to-end pipeline execution
+AUC-PR: Preferred under severe class imbalance
 
-notebooks/evaluation_report.ipynb: Visual comparison of classifier performance
+Confusion Matrix: Error profiling for fraud vs non-fraud
 
-# Metrics Used
-F1-Score: Captures balance between precision and recall
+Files
+src/model_training.py: Training routines for each model
 
-AUC-PR: Optimized for imbalance sensitivity
+src/model_utils.py: Metric computation and model saving
 
-Confusion Matrix: Highlights misclassifications
+src/extended_pipeline_task2.py: Full pipeline executor
 
-# Execution
-Run training:
+notebooks/evaluation_report.ipynb: Visual comparison of model performance
 
+# Run Training
 python src/extended_pipeline_task2.py
-Evaluation results stored under:
-
-artifacts/{ecom, bank}/
-
-models/
-
-# Visualize performance:
+View results:
 
 jupyter notebook notebooks/evaluation_report.ipynb
-🔍 Task 3 — Model Explainability with SHAP
-This component introduces post-hoc interpretability using SHAP to deconstruct model predictions and support auditability. It delivers local and global insights for transparency across business and regulatory boundaries.
+Outputs Saved to
+artifacts/ecom/, artifacts/bank/
 
-# Modules
-src/explainability.py: Generates SHAP plots
+models/ → includes trained .pkl files and metric snapshots
 
-notebooks/shap_explainability.ipynb: Visual dashboard for interpretation
+# Task 3 — Model Interpretability with SHAP
+Transparency is non-negotiable in fraud modeling. SHAP (SHapley Additive exPlanations) was integrated to:
 
-# Outputs
-SHAP Summary Plot: Global feature contribution
+Clarify global feature importance
 
-SHAP Force Plot: Individual prediction breakdown
+Unpack individual fraud predictions
 
-Waterfall Plot: Directional contribution per feature
+Support trust, audit, and debugging efforts
 
-# Execution
-Launch interactive notebook:
+Visual Outputs
+Summary Plot: Mean feature impact across dataset
 
+Force Plot: Local explanation for individual transactions
 
+Waterfall Plot: Step-by-step contribution breakdown
+
+Files
+src/explainability.py: SHAP explainer logic
+
+notebooks/shap_explainability.ipynb: Dashboard for interpretation
+
+# Run SHAP Analysis
 jupyter notebook notebooks/shap_explainability.ipynb
-Plots saved to:
-
+Plots Saved To
 models/{ecom, bank}_shap_summary_plot.png
 
 models/{ecom, bank}_shap_force_plot.png
 
-# Maintained by Sabona Terefe
-# Machine Learning Engineer specializing in NLP, modular pipelines, and scalable data infrastructure.
+models/{ecom, bank}_shap_waterfall_plot.png
+
+# Learning Outcomes
+Skills Developed
+
+Modular pipeline engineering
+
+Imbalanced classification using SMOTE
+
+Feature engineering for fraud behavior and temporal signals
+
+XGBoost tuning and performance profiling
+
+SHAP-based model interpretation
+
+Core Concepts Applied
+
+IP-based geolocation mapping
+
+PCA feature handling for anonymized banking data
+
+Post-split resampling to prevent data leakage
+
+Explaining fraud decisions using SHAP visuals
+
+Engineering Practices
+
+Version-controlled artifacts with DVC
+
+Separation of concerns across tasks
+
+Clear reporting via notebooks
+
+Audit-ready model metadata
+
+# Getting Started
+Clone the repo from DagsHub
+
+Create a virtual environment and install dependencies:
+
+pip install -r requirements.txt
+Execute preprocessing, training, and interpretation workflows
+
+Explore notebooks for visual insights
+
+# Maintainer
+# Sabona Terefe Machine Learning Engineer Specialized in NLP, scalable pipelines, and structured fraud systems
